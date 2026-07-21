@@ -1,28 +1,33 @@
 "use client";
 
-import { Loader2 } from "lucide-react";
+import Link from "next/link";
+import { useAuth } from "@/hooks/useAuth";
 import { useTranslations } from "next-intl";
-import { Controller, useForm } from "react-hook-form";
+import { useForm, type Resolver } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 import { loginSchema, type LoginSchema } from "@/lib/validations/login.schema";
 
-import { Button } from "@/components/ui/button";
+import {ROUTES} from "@/constants/routes";
+import LoadingButton from "@/components/common/LoadingButton";
+
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
 
 import PasswordInput from "./PasswordInput";
 
 export default function LoginForm() {
   const t = useTranslations("Login");
 
-  const {
-    register,
-    control,
-    handleSubmit,
-    formState: { errors, isSubmitting },
-  } = useForm<LoginSchema>({
+  const form = useForm<LoginSchema>({
     resolver: zodResolver(loginSchema),
     defaultValues: {
       email: "",
@@ -30,10 +35,13 @@ export default function LoginForm() {
       rememberMe: false,
     },
   });
+  const {login}=useAuth();
 
   const onSubmit = async (data: LoginSchema) => {
     try {
-      console.log(data);
+      await login(data);
+
+      console.log("Utilisateur connecté");
     } catch (error) {
       console.error(error);
     }
@@ -48,79 +56,91 @@ export default function LoginForm() {
         <p className="text-sm text-slate-300">{t("subtitle")}</p>
       </div>
 
-      <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
-        {/* Email */}
-        <div className="space-y-2">
-          <Label htmlFor="email">{t("email")}</Label>
+      <Form {...form}>
+        <form
+          onSubmit={form.handleSubmit(onSubmit)}
+          noValidate
+          className="space-y-5"
+        >
+          {/* Email */}
+          <FormField
+            control={form.control}
+            name="email"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>{t("email")}</FormLabel>
 
-          <Input
-            id="email"
-            type="email"
-            placeholder={t("emailPlaceholder")}
-            {...register("email")}
+                <FormControl>
+                  <Input
+                    type="email"
+                    autoComplete="email"
+                    placeholder={t("emailPlaceholder")}
+                    {...field}
+                  />
+                </FormControl>
+
+                <FormMessage />
+              </FormItem>
+            )}
           />
 
-          {errors.email && (
-            <p className="text-sm text-red-500">{errors.email.message}</p>
-          )}
-        </div>
-
-        {/* Password */}
-        <div className="space-y-2">
-          <Label htmlFor="password">{t("password")}</Label>
-
-          <Controller
-            control={control}
+          {/* Password */}
+          <FormField
+            control={form.control}
             name="password"
             render={({ field }) => (
-              <PasswordInput
-                value={field.value}
-                onChange={field.onChange}
-                placeholder={t("passwordPlaceholder")}
-              />
+              <FormItem>
+                <FormLabel>{t("password")}</FormLabel>
+
+                <FormControl>
+                  <PasswordInput
+                    value={field.value}
+                    onChange={field.onChange}
+                    placeholder={t("passwordPlaceholder")}
+                  />
+                </FormControl>
+
+                <FormMessage />
+              </FormItem>
             )}
           />
 
-          {errors.password && (
-            <p className="text-sm text-red-500">{errors.password.message}</p>
-          )}
-        </div>
+          {/* Remember me + Forgot password */}
+          <div className="flex items-center justify-between">
+            <FormField
+              control={form.control}
+              name="rememberMe"
+              render={({ field }) => (
+                <FormItem className="flex flex-row items-center space-x-3 space-y-0">
+                  <FormControl>
+                    <Checkbox
+                      checked={field.value}
+                      onCheckedChange={(checked) =>
+                        field.onChange(Boolean(checked))
+                      }
+                    />
+                  </FormControl>
 
-        {/* Remember me */}
-        <div className="flex items-center justify-between">
-          <Controller
-            control={control}
-            name="rememberMe"
-            render={({ field }) => (
-              <div className="flex items-center space-x-2">
-                <Checkbox
-                  id="rememberMe"
-                  checked={field.value}
-                  onCheckedChange={(checked) =>
-                    field.onChange(Boolean(checked))
-                  }
-                />
+                  <FormLabel className="font-normal cursor-pointer">
+                    {t("rememberMe")}
+                  </FormLabel>
+                </FormItem>
+              )}
+            />
 
-                <Label htmlFor="rememberMe">{t("rememberMe")}</Label>
-              </div>
-            )}
-          />
+            <Link href={ROUTES.FORGOT_PASSWORD}>{t("forgotPassword")}</Link>
+          </div>
 
-          <button
-            type="button"
-            className="text-sm text-blue-400 hover:underline"
+          {/* Submit */}
+          <LoadingButton
+            type="submit"
+            loading={form.formState.isSubmitting}
+            className="h-12 w-full"
           >
-            {t("forgotPassword")}
-          </button>
-        </div>
-
-        {/* Submit */}
-        <Button type="submit" disabled={isSubmitting} className="h-12 w-full">
-          {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-
-          {isSubmitting ? t("loading") : t("submit")}
-        </Button>
-      </form>
+            {t("submit")}
+          </LoadingButton>
+        </form>
+      </Form>
     </div>
   );
 }

@@ -9,16 +9,16 @@ export default function LoginCard() {
       <div
         className="
           relative
-          z-10
+          z-4
           w-full
           max-w-md
           rounded-3xl
           border
-          border-white/20
-          bg-white/10
+          border-green/20
+          bg-blue/12
           p-10
           shadow-2xl
-          backdrop-blur-2xl
+          backdrop-blur-4xl
         "
       >
         <LoginForm />

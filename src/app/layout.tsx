@@ -1,4 +1,5 @@
 import "./globals.css";
+import { AuthProvider } from "@/providers/AuthProvider";
 
 export const metadata = {
   title: "Login Page",
@@ -12,7 +13,9 @@ export default function RootLayout({
 }) {
   return (
     <html lang="fr" suppressHydrationWarning>
-      <body>{children}</body>
+      <body>
+        <AuthProvider>{children}</AuthProvider>
+      </body>
     </html>
   );
 }
