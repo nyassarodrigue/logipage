@@ -1,10 +1,14 @@
 {
   "Login": {
     "title": "Connexion",
-    "email": "Adresse email",
+    "subtitle": "Bienvenue, connectez-vous à votre compte",
+    "email": "Adresse e-mail",
+    "emailPlaceholder": "Entrez votre adresse e-mail",
     "password": "Mot de passe",
-    "remember": "Se souvenir de moi",
+    "passwordPlaceholder": "Entrez votre mot de passe",
+    "rememberMe": "Se souvenir de moi",
+    "forgotPassword": "Mot de passe oublié ?",
     "submit": "Se connecter",
-    "forgot": "Mot de passe oublié ?"
+    "loading": "Connexion..."
   }
 }

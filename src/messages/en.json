@@ -1,10 +1,14 @@
 {
   "Login": {
-    "title": "Login",
+    "title": "Sign In",
+    "subtitle": "Welcome back, sign in to your account",
     "email": "Email",
+    "emailPlaceholder": "Enter your email",
     "password": "Password",
-    "remember": "Remember me",
+    "passwordPlaceholder": "Enter your password",
+    "rememberMe": "Remember me",
+    "forgotPassword": "Forgot password?",
     "submit": "Sign in",
-    "forgot": "Forgot password?"
+    "loading": "Signing in..."
   }
 }
