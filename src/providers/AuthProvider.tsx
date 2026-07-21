@@ -5,10 +5,12 @@ import {
   useContext,
   useEffect,
   useState,
-  ReactNode,
+  type ReactNode,
 } from "react";
 
 import { authService } from "@/services/auth.service";
+import { setupInterceptors } from "@/services/interceptors";
+
 import type { LoginRequest, User } from "@/types/auth";
 
 interface AuthContextType {
@@ -25,10 +27,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    loadCurrentUser();
-  }, []);
-
   async function loadCurrentUser() {
     try {
       const me = await authService.me();
@@ -40,11 +38,17 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   }
 
+  useEffect(() => {
+    // Les intercepteurs ne sont enregistrés qu'une seule fois
+    setupInterceptors();
+
+    void loadCurrentUser();
+  }, []);
+
   async function login(payload: LoginRequest) {
     await authService.login(payload);
 
     const me = await authService.me();
-
     setUser(me);
   }
 
