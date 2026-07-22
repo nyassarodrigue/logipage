@@ -53,7 +53,7 @@ export default function LoginForm() {
       <div className="space-y-2 text-center">
         <h1 className="text-3xl font-bold text-white">{t("title")}</h1>
 
-        <p className="text-sm text-slate-300">{t("subtitle")}</p>
+        <p className="text-sm text-white-500">{t("subtitle")}</p>
       </div>
 
       <Form {...form}>

@@ -14,7 +14,7 @@ export default function LoginCard() {
           max-w-md
           rounded-3xl
           border
-          border-green/20
+          border-white/20
           bg-blue/12
           p-10
           shadow-2xl
